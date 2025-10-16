@@ -17,4 +17,12 @@ router.put("/user/:id", verifyToken, authorizeRole(["ADMIN"]), userController.up
 router.delete("/user/:id", verifyToken, authorizeRole(["ADMIN"]), userController.softDeleteUser);
 router.patch("/user/:id/restore", verifyToken, authorizeRole(["ADMIN"]), userController.restoreUser);
 
+//logout , forgetpassword
+router.post("/user/logout", verifyToken, userController.logoutUser);
+router.post("/user/forgetpassword", userController.sendOtpToken);
+router.post("/user/verifyOTP", userController.verifyOtp);
+router.post("/user/resetPassword", userController.resetPassword);
+router.post("/user/changePassword",verifyToken, userController.changePassword);
+
+
 export default router;
