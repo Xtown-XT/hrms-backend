@@ -67,12 +67,28 @@ class BaseService {
   }
 
   // Delete record by ID
-  async delete(id) {
+//   async delete(id) {
+//     const record = await this.Model.findByPk(id);
+//     if (!record) throw new Error(`${this.Model.name} not found`);
+//     await record.destroy();
+//     return { message: `${this.Model.name} deleted successfully` };
+//   }
+// }
+
+
+async delete(id) {
     const record = await this.Model.findByPk(id);
     if (!record) throw new Error(`${this.Model.name} not found`);
+
+    if (this.Model.options.paranoid) {
+      await record.update({ is_active: false });
+      await record.destroy(); // marks as deleted (sets deleted_at)
+      return { message: `${this.Model.name} soft deleted successfully` };
+    }
+
+    // fallback hard delete if not paranoid
     await record.destroy();
-    return { message: `${this.Model.name} deleted successfully` };
+    return { message: `${this.Model.name} permanently deleted` };
   }
 }
-
 export default BaseService;
