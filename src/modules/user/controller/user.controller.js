@@ -150,6 +150,28 @@ const userController = {
     }
   },
 
+    // ✅ Verify OTP
+  async verifyOtp(req, res) {
+    try {
+      const { identifier, otp } = req.body;
+      await userService.verifyOtp(identifier, otp);
+      return res.status(200).json({ message: "OTP verified successfully" });
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
+  // ✅ Reset password after OTP verified
+  async resetPassword(req, res) {
+    try {
+      const { identifier, newPassword } = req.body;
+      await userService.resetPassword(identifier, newPassword);
+      return res.status(200).json({ message: "Password reset successfully" });
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  },
+
   // ✅ Check if user exists
   async userAlreadyExists(req, res) {
     try {

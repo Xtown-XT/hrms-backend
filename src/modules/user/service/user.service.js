@@ -2,6 +2,12 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { generateToken, generateRefreshToken } from "../../../utils/token.js";
+
+import { generateOtp } from "../../../utils/generateOtp.js";
+import { sendEmailOtp } from "../../../utils/sendEmailOtp.js";
+import { sendSmsOtp } from "../../../utils/sendSmsOtp.js";
+
+
 import dotenv from "dotenv"; // here we import that
 dotenv.config(); // here we call the config method to acess the .env file
 // import { Op } from "sequelize";
@@ -134,12 +140,36 @@ async loginUser({ identifier, password }) {
     return true;
   },
 
-  // 🔹 Send OTP token (dummy for now)
+  // // 🔹 Send OTP token (dummy for now)
+  // async sendOtpToken(identifier) {
+  //   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  //   // here you can save OTP in DB/Redis and send via email/SMS
+  //   return otp;
+  // },
+
   async sendOtpToken(identifier) {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    // here you can save OTP in DB/Redis and send via email/SMS
-    return otp;
-  },
+  const otp = generateOtp();
+
+  const isEmail = /\S+@\S+\.\S+/.test(identifier);
+
+  const user = await User.findOne({
+    where: isEmail ? { email: identifier } : { phone: identifier },
+  });
+
+  if (!user) throw new Error("User not found with given email or phone number");
+
+  // Send OTP
+  if (isEmail) {
+    await sendEmailOtp(identifier, otp);
+  } else {
+    await sendSmsOtp(identifier, otp);
+  }
+
+  // Store OTP in the user (or ideally in a separate OTP table)
+  await user.update({ otp, otp_expires_at: new Date(Date.now() + 5 * 60 * 1000) });
+
+  return otp; // for testing only
+},
 
   // 🔹 Check if user already exists
   async userAlreadyExists(email) {
@@ -159,6 +189,43 @@ async loginUser({ identifier, password }) {
     await user.update({ password: hashed });
     return true;
   },
+
+  async verifyOtp(identifier, otp) {
+  const isEmail = /\S+@\S+\.\S+/.test(identifier);
+  const user = await User.findOne({
+    where: isEmail ? { email: identifier } : { phone: identifier },
+  });
+
+  if (!user || !user.otp) throw new Error("OTP not found. Please request again.");
+
+  if (user.otp !== otp) throw new Error("Invalid OTP.");
+  if (new Date() > user.otp_expires_at) throw new Error("OTP expired.");
+
+  // Clear OTP after verification
+  await user.update({ otp: null, otp_expires_at: null, otp_verified: true });
+
+  return true;
+},
+
+ async resetPassword(identifier, newPassword) {
+  const isEmail = /\S+@\S+\.\S+/.test(identifier);
+  const user = await User.findOne({
+    where: isEmail ? { email: identifier } : { phone: identifier },
+  });
+
+  if (!user) throw new Error("User not found.");
+
+  // Optional: check if OTP was recently verified
+  if (!user.otp_verified) throw new Error("OTP not verified.");
+
+  const hashed = await bcrypt.hash(newPassword, 10);
+  await user.update({ password: hashed, otp_verified: false });
+
+  return true;
+}
+
 };
+
+
 
 export default userService;
