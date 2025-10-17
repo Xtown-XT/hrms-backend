@@ -5,9 +5,11 @@ import helmet from 'helmet';
 import {responseHelper } from './middleware/index.js';
 // import userRoutes from './user/routes/index.js';
 import userRoutes from './modules/user/routes/index.js';
+import CompanyAssetRoutes from './modules/companymaster/routes/companyasset.routes.js';
+import shiftRoutes from './modules/shiftmaster/routes/shift.routes.js';
 const app = express();
 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
@@ -29,10 +31,12 @@ app.get('/api/error', (req, res) => {
 
 //routes
 app.use('/hrms_api/v1', userRoutes);
+app.use('/hrms_api/v1', CompanyAssetRoutes);
+app.use('/hrms_api/v1', shiftRoutes);
 
 
 app.use((req, res) => {
   return res.sendError('Route not found', 404);
 });
 
-export default app; 
+export default app;

@@ -1,9 +1,9 @@
 // models/user.model.js
 
-import { sequelize } from '../../../db/index.js';
+import { sequelize,DataTypes} from "../../../db/index.js";
 // import { DataTypes } from 'sequelize';
-import pkg from 'sequelize';
-const { DataTypes } = pkg;
+// import pkg from 'sequelize';
+// const { DataTypes } = pkg;
 
 
 

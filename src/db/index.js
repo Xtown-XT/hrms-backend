@@ -1,58 +1,53 @@
-// // // import { Sequelize } from "sequelize";
-
-// // import pkg from 'sequelize';
-// // const { Sequelize } = pkg;
-
-// // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
-// //   host: "192.168.1.150",
-// //   port: 3306,
-// //   dialect: "mysql",
-// // });
-
-// // sequelize
-// //   .authenticate()
-// //   .then(() => console.log("Database is Connected"))
-// //   .catch((err) => console.error(`Database connection error: ${err}`));
-
-
-// // export { sequelize };
-
-
-
-
+// // Import entire Sequelize module
 // import SequelizePkg from "sequelize";
 
-// const { Sequelize, DataTypes, Op } = SequelizePkg;
+// // Access the Sequelize constructor, DataTypes, and Op
+// const Sequelize = SequelizePkg.Sequelize;
+// const { DataTypes, Op } = SequelizePkg;
 
+// // Create Sequelize instance
 // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
-//   host: "192.168.1.150",
+//   host: "192.168.1.150",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 //   port: 3306,
 //   dialect: "mysql",
 // });
 
-// sequelize
-//   .authenticate()
-//   .then(() => console.log("Database is Connected"))
-//   .catch((err) => console.error(`Database connection error: ${err}`));
+// // Authenticate database connection inside async IIFE
+// (async () => {
+//   try {
+//     await sequelize.authenticate();
+//     console.log("✅ Database connected successfully");
+//   } catch (err) {
+//     console.error("❌ Database connection error:", err);
+//   }
+// })();
 
-// export { sequelize, Sequelize, DataTypes, Op };
+// // Export for models/services
+// export { sequelize, DataTypes, Op };
+// Import entire Sequelize module
+import SequelizePkg from "sequelize";
 
+// Access the Sequelize constructor, DataTypes, and Op
+const Sequelize = SequelizePkg; // <-- fix here
+const { DataTypes, Op } = SequelizePkg;
 
-import sequelizePkg from "sequelize";
-const Sequelize = sequelizePkg.Sequelize; // ✅ Correct constructor reference
-const { DataTypes, Op } = sequelizePkg;
-
+// Create Sequelize instance
 const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
   host: "192.168.1.150",
   port: 3306,
   dialect: "mysql",
 });
 
-try {
-  await sequelize.authenticate();
-  console.log("✅ Database connected successfully");
-} catch (err) {
-  console.error("❌ Database connection error:", err);
-}
+// Authenticate database connection inside async IIFE
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connected successfully");
+  } catch (err) {
+    console.error("❌ Database connection error:", err);
+  }
+})();
 
-export { sequelize, Sequelize, DataTypes, Op };
+// Export for models/services
+export { sequelize, DataTypes, Op };
+
