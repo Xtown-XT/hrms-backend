@@ -1,5 +1,13 @@
-import CompanyAsset from "../models/companyasset.model.js";
+
+import { Op } from "sequelize";
+import Attendance from "../attendance.models/attendance.models.js"; // fixed folder/file name
 import BaseService from "../../../services/service.js";
+
+
+// =======
+// import CompanyAsset from "../models/companyasset.model.js";
+// import BaseService from "../../../services/service.js";
+
 
 const companyAssetService = new BaseService(CompanyAsset);
 
