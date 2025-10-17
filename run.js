@@ -27,6 +27,12 @@ function getLocalIP() {
 // Mark the listener callback `async` so you can `await` inside it
 app.listen(port, host, async () => {
   try {
+
+    
+    //  await sequelize.query('SET FOREIGN_KEY_CHECKS = 0'); // 🔧 disable temporarily
+    // await sequelize.sync({ force: true });
+    // await sequelize.query('SET FOREIGN_KEY_CHECKS = 1'); // 🔧 re-enable
+
     // Ensure DB tables/models are all in place
     await sequelize.sync();
     // await sequelize.sync({ force: true })
