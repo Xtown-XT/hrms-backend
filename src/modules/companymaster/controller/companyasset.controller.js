@@ -1,11 +1,11 @@
 
 import { Op } from "sequelize";
-import Attendance from "../attendance.models/attendance.models.js"; // fixed folder/file name
+// import Attendance from "../attendance.models/attendance.models.js"; // fixed folder/file name
 import BaseService from "../../../services/service.js";
 
 
 // =======
-// import CompanyAsset from "../models/companyasset.model.js";
+import CompanyAsset from "../models/companyasset.model.js";
 // import BaseService from "../../../services/service.js";
 
 
