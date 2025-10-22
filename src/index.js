@@ -11,6 +11,8 @@ import CompanyAssetRoutes from './modules/companymaster/routes/companyasset.rout
 import shiftRoutes from './modules/shiftmaster/routes/shift.routes.js';
 import employee from './modules/employee/routes/index.js';
 import attendanceRoutes from './modules/Attendancemaster/attendanceroutes/index.js';
+import employee from './modules/employee/routes/index.js'
+import attendanceRoutes from './modules/attandance/routes/index.js';
 
 const app = express();
 

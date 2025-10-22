@@ -1,7 +1,6 @@
 // src/modules/employee/models/employee.model.js
-import { DataTypes , Op } from "sequelize";
+import { DataTypes, Op } from "sequelize";
 import { sequelize } from "../../../db/index.js";
-// import sequelize, { DataTypes, Op } from "../../../db/xtown.js";
 
 const Employee = sequelize.define(
   "Employee",
@@ -54,22 +53,32 @@ const Employee = sequelize.define(
       allowNull: true,
     },
     created_by: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "endusers",
+        key: "id",
+      },
     },
     updated_by: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: "endusers",
+        key: "id",
+      },
     },
   },
   {
     tableName: "employees",
     timestamps: true,
-     paranoid: true, // 👈 enables soft delete
-    deletedAt: "deleted_at", // stores timestamp instead of deleting record
+    paranoid: true, // enables soft delete
+    deletedAt: "deleted_at",
 
-     hooks: {
+    hooks: {
       beforeCreate: async (employee) => {
         if (!employee.emp_id) {
-          const year = new Date().getFullYear().toString().slice(-2); // "25"
+          const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
           const prefix = `XT-${year}-`;
 
           const lastEmployee = await Employee.findOne({
@@ -88,8 +97,7 @@ const Employee = sequelize.define(
         }
       },
     },
-  },
-  
+  }
 );
 
 export default Employee;

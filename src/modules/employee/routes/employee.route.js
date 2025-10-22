@@ -14,7 +14,7 @@ const router = Router();
 
 // CREATE
 router.post(
-  "/create",
+  "/createEmployee",
   verifyToken,
   authorizeRole(["admin", "superadmin", "hr"]),
   upload.single("profile_picture"),
@@ -24,7 +24,7 @@ router.post(
 
 // GET ALL
 router.get(
-  "/all",
+  "/getAllEmployees",
   verifyToken,
   authorizeRole(["admin", "superadmin", "hr", "manager"]),
   employeeController.getAllEmployees
@@ -32,7 +32,7 @@ router.get(
 
 // GET BY ID
 router.get(
-  "/:id",
+  "/getEmployeeById/:id",
   verifyToken,
   authorizeRole(["admin", "superadmin", "hr", "manager"]),
   validate(idSchema, "params"),
@@ -41,7 +41,7 @@ router.get(
 
 // UPDATE
 router.put(
-  "/:id",
+  "/updateEmployee/:id",
   verifyToken,
   authorizeRole(["admin", "superadmin", "hr"]),
   upload.single("profile_picture"),
@@ -51,7 +51,7 @@ router.put(
 
 // DELETE
 router.delete(
-  "/:id",
+  "/deleteEmployee/:id",
   verifyToken,
   authorizeRole(["admin", "superadmin"]),
   validate(idSchema, "params"),
@@ -65,5 +65,35 @@ router.delete(
 //   validate(idSchema, "params"),
 //   employeeController.restoreEmployee
 // );
+
+
+// router.post(
+//   "/addEmployeeFullInfo",
+//   verifyToken,
+//   authorizeRole(["admin", "superadmin"]),
+//   // validate(idSchema, "params"),
+//   employeeController.addEmployeeFullInfo
+// );
+
+router.post(
+  "/addEmployeeFullInfo",
+  verifyToken,
+  authorizeRole(["admin", "superadmin"]),
+  upload.fields([
+    { name: "aadhar", maxCount: 1 },
+    { name: "pan", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+    { name: "degree", maxCount: 1 },
+    { name: "marksheet", maxCount: 1 },
+    { name: "relieving", maxCount: 1 },
+    { name: "experience", maxCount: 1 },
+    { name: "offer", maxCount: 1 },
+    { name: "passport", maxCount: 1 },
+    { name: "driving", maxCount: 1 },
+    { name: "addressproof", maxCount: 1 },
+    { name: "bankproof", maxCount: 1 },
+  ]),
+  employeeController.addEmployeeFullInfo
+);
 
 export default router;
