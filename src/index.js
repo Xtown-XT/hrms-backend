@@ -7,10 +7,8 @@ import path from "path";
 
 // import userRoutes from './user/routes/index.js';
 import userRoutes from './modules/user/routes/index.js';
-import CompanyAssetRoutes from './modules/companymaster/routes/companyasset.routes.js';
-import shiftRoutes from './modules/shiftmaster/routes/shift.routes.js';
-import employee from './modules/employee/routes/index.js';
-import attendanceRoutes from './modules/Attendancemaster/attendanceroutes/index.js';
+import CompanyAssetRoutes from './modules/companymaster/routes/index.js';
+import shiftRoutes from './modules/shiftmaster/routes/index.js';
 import employee from './modules/employee/routes/index.js'
 import attendanceRoutes from './modules/attandance/routes/index.js';
 
@@ -45,7 +43,7 @@ app.use('/hrms_api/v1', shiftRoutes);
 
 app.use('/hrms_api/v1', employee)
 
-app.use('/hrms_api/v1', attendanceRoutes);
+// app.use('/hrms_api/v1', attendanceRoutes);
 
 
 

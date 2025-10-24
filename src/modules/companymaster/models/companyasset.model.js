@@ -61,23 +61,45 @@ const CompanyAsset = sequelize.define(
       defaultValue: DataTypes.UUIDV4, // ✅ Sequelize handles UUID automatically
       primaryKey: true,
     },
-    asset_name: {
+    asset_id:{
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4, // ✅ Sequelize handles UUID automatically
+      primaryKey: true,
+    },
+    asset_type: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      primaryKey: true,
+    },
+    purchased_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    serial_number: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
     },
     model_type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM("ACER","DELL","HP","LENOVO","APPLE","SAMSUNG","OTHER"), // ✅ Added more options
       allowNull: true,
     },
     condition: {
-      type: DataTypes.ENUM("new", "good", "under_maintenance"), // ✅ fixed typo
+      type: DataTypes.ENUM("new", "refurbished"), // ✅ fixed typo
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("active", "inactive"), // ✅ removed space
+      type: DataTypes.ENUM("active", "inactive","returned","lost"), // ✅ removed space
       allowNull: false,
       defaultValue: "active",
+    },
+    value: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    notes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     is_active: {
       type: DataTypes.BOOLEAN,

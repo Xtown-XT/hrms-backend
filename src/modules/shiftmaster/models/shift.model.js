@@ -13,7 +13,7 @@ const Shift = sequelize.define(
     shift_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      primaryKey: true,
     },
     start_time: {
       type: DataTypes.TIME,
