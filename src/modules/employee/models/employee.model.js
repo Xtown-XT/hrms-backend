@@ -13,7 +13,7 @@ const Employee = sequelize.define(
     },
     emp_id: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     attendance_id: {

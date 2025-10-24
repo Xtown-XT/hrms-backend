@@ -96,4 +96,48 @@ router.post(
   employeeController.addEmployeeFullInfo
 );
 
+// router.put(
+//   "/updateEmployeeInfo/:id",
+//   verifyToken,
+//   authorizeRole(["admin", "superadmin", "hr"]),
+//   upload.fields([
+//     { name: "aadhar", maxCount: 1 },
+//     { name: "pan", maxCount: 1 },
+//     { name: "resume", maxCount: 1 },
+//     { name: "degree", maxCount: 1 },
+//     { name: "marksheet", maxCount: 1 },
+//     { name: "relieving", maxCount: 1 },
+//     { name: "experience", maxCount: 1 },
+//     { name: "offer", maxCount: 1 },
+//     { name: "passport", maxCount: 1 },
+//     { name: "driving", maxCount: 1 },
+//     { name: "addressproof", maxCount: 1 },
+//     { name: "bankproof", maxCount: 1 },
+//   ]),
+//   validate(idSchema, "params"),
+//   employeeController.updateEmployeeFullInfo
+// );
+
+// 🟢 PUT - Update Employee Full Info
+router.put(
+  "/updateEmployeeFullInfo/:emp_id",
+  verifyToken,
+  authorizeRole(["admin", "superadmin"]),
+  upload.fields([
+    { name: "aadhar", maxCount: 1 },
+    { name: "pan", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+    { name: "degree", maxCount: 1 },
+    { name: "marksheet", maxCount: 1 },
+    { name: "relieving", maxCount: 1 },
+    { name: "experience", maxCount: 1 },
+    { name: "offer", maxCount: 1 },
+    { name: "passport", maxCount: 1 },
+    { name: "driving", maxCount: 1 },
+    { name: "addressproof", maxCount: 1 },
+    { name: "bankproof", maxCount: 1 },
+  ]),
+  employeeController.updateEmployeeFullInfo
+);
+
 export default router;
