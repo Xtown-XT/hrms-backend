@@ -50,14 +50,17 @@ const router = Router();
 router.post(
   "/companyasset/create",
   verifyToken,
-  authorizeRole(["admin,superadmin,user"]),
+  authorizeRole(
+    // ["admin"]
+    ["admin", "superadmin", "user"]
+  ),
   companyassetController.createCompanyAsset
 );
 
 router.get(
   "/companyasset/all",
   verifyToken,
-  authorizeRole(["admin,superadmin,user"]),
+  authorizeRole(["admin","superadmin","user"]),
   companyassetController.getAllCompanyAssets
 );
 
@@ -65,7 +68,7 @@ router.get(
 router.get(
   "/companyasset/:id",
   verifyToken,
-  authorizeRole(["admin,superadmin,user"]),
+  authorizeRole(["admin","superadmin","user"]),
   validate(idSchema, "params"),
   companyassetController.getCompanyAssetById
 );

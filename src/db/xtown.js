@@ -12,7 +12,7 @@ const { DataTypes, Op } = SequelizePkg;
 //     dialect: "mysql",
 // });
 
-const sequelize =new Sequelize("xtown", "root", "jothi@2114", {
+const sequelize =new Sequelize("xtown", "root", "Sanjay@1218", {
   host: "127.0.0.1",
   port: 3306,
     dialect: "mysql",
