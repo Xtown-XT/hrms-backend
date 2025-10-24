@@ -1,6 +1,6 @@
 // models/personnelEmployee.model.js
 import { DataTypes } from "sequelize";
-import { sequelize as xtown } from "../../../db/xtown.js";
+import {  xtown } from "../../../../src/db/xtown.js";
 
 const PersonnelEmployee = xtown.define("PersonnelEmployee", {
   create_time: {

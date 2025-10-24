@@ -7,7 +7,7 @@ import os from 'os';
 
 // Import two separate Sequelize instances with different names
 import { sequelize as hrmsSequelize } from './src/db/index.js';
-import { sequelize as xtownSequelize } from './src/db/xtown.js';
+import { xtown as xtownSequelize } from './src/db/xtown.js'; 
 
 // ← Add this import:
 // import { sequelize } from './src/db/index.js';
@@ -15,7 +15,7 @@ import { sequelize as xtownSequelize } from './src/db/xtown.js';
 
 dotenv.config();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT ||4001
 const host = process.env.HOST || getLocalIP();
 
 // Function to get the local IP address
@@ -37,7 +37,7 @@ app.listen(port, host, async () => {
   try {
     // Sync tables for both databases
     await hrmsSequelize.sync();      // Sync hrms_demo
-    await xtownSequelize.sync();     // Sync xtown / att
+    await xtownSequelize.sync({alert : true});     // Sync xtown / att
 
 
     console.log(`Server is running on http://${host}:${port}`);

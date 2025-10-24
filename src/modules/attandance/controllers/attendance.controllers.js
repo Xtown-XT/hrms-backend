@@ -4,6 +4,7 @@ import Employee from "../../employee/models/employee.model.js";
 import BaseService from "../../../services/service.js";
 import IClockTransaction from "../models/iclocktransaction.models.js";
 import PersonnelEmployee from "../models/personalempolye.models.js"; 
+import { createAttendanceSchema } from "../dto/attandance.zod.js";
 
 const attendanceService = new BaseService(Attendance, PersonnelEmployee, IClockTransaction);
 
@@ -13,7 +14,7 @@ const ABSENT_THRESHOLD_HOURS = 3; // 3 hours after start → mark absent
 
 // 🧠 Auto-mark absentees if not punched after 12 PM
 export const autoMarkAbsentees = async () => {
-  try {
+  try {z
     const now = new Date();
     const today = now.toISOString().slice(0, 10);
     const thresholdTime = new Date();
@@ -46,6 +47,10 @@ export const autoMarkAbsentees = async () => {
 export const createAttendance = async (req, res) => {
   try {
     const { emp_id, emp_name, attendance_date, in_time, out_time, status } = req.body;
+    const validation = await createAttendanceSchema.safeParseAsync(req.body);
+    if (!validation.success){
+      return res.status(400).json({ message: validation.error.message})
+    }
 
     // 🟢 Save in HRMS DB
     const hrmsRecord = await Attendance.create({
