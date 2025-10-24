@@ -9,8 +9,7 @@
 //   host: "192.168.1.150",
 //   port: 3306,
 //     dialect: "mysql",
-// });
-
+//
 // // Authenticate database connection inside async IIFE
 // (async () => {
 //   try {
@@ -20,6 +19,13 @@
 //     console.error("❌ Database connection error:", err);
 //   }
 // })();
+// =======
+// const sequelize =new Sequelize("xtown", "root", "Sanjay@1218", {
+//   host: "127.0.0.1",
+//   port: 3306,
+//     dialect: "mysql",
+// });
+
 
 // export { sequelize, DataTypes, Op };
 
