@@ -2,19 +2,24 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import {responseHelper } from './middleware/index.js';
-import path from "path";
+import path from 'path';
+import { responseHelper } from './middleware/index.js';
 
-// import userRoutes from './user/routes/index.js';
 import userRoutes from './modules/user/routes/index.js';
 
 // import CompanyAssetRoutes from './modules/companymaster/routes/companyasset.routes.js';
 // import shiftRoutes from './modules/shiftmaster/routes/shift.routes.js';
+import employeeRoutes from './modules/employee/routes/index.js';
 
-import CompanyAssetRoutes from './modules/companymaster/routes/index.js';
+
+// import CompanyAssetRoutes from './modules/companymaster/routes/companyasset.routes.js';
+// import shiftRoutes from './modules/shiftmaster/routes/shift.routes.js';
+
+// import CompanyAssetRoutes from './modules/companymaster/routes/index.js';
 import shiftRoutes from './modules/shiftmaster/routes/index.js';
 
-import employee from './modules/employee/routes/index.js'
+// import employee from './modules/employee/routes/index.js'
+
 import attendanceRoutes from './modules/attandance/routes/index.js';
 
 const app = express();
@@ -29,10 +34,10 @@ app.use(responseHelper);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get('/', (req, res) => {
-  res.send("Hello World!!").status(404);
-}
-);
+  res.status(200).send("✅ HRMS API Running Successfully");
+});
 
+// Test routes
 app.get('/api/data', (req, res) => {
   res.sendSuccess({ value: 42 }, 'Data fetched successfully');
 });
@@ -41,12 +46,19 @@ app.get('/api/error', (req, res) => {
   res.sendError('Something went wrong', 422, [{ field: 'email', message: 'Invalid' }]);
 });
 
-//routes
+// ✅ Mount all routes
 app.use('/hrms_api/v1', userRoutes);
-app.use('/hrms_api/v1', CompanyAssetRoutes);
+// app.use('/hrms_api/v1', CompanyAssetRoutes);
 app.use('/hrms_api/v1', shiftRoutes);
-app.use('/hrms_api/v1', employee)
+
+app.use('/hrms_api/v1', employeeRoutes);
 app.use('/hrms_api/v1', attendanceRoutes);
+
+// ✅ Catch-all for unknown routes
+
+// app.use('/hrms_api/v1', employee)
+// app.use('/hrms_api/v1', attendanceRoutes);
+
 
 app.use((req, res) => {
   return res.sendError('Route not found', 404);

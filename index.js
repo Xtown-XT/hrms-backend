@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { sequelize } from './src/db/index.js';
 
 dotenv.config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4001;
 
 
 app.listen(port, async () => {

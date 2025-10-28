@@ -3,8 +3,7 @@ import dotenv from 'dotenv';
 import { sequelize } from './src/db/xtown.js';
 
 dotenv.config();
-const port = process.env.PORT || 5000;
-
+const port = process.env.PORT
 
 app.listen(port, async () => {
   try {
