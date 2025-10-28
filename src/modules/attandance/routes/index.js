@@ -3,5 +3,12 @@ import attendanceRoutes from "./attandance.route.js"
 
 const router = express.Router();
 router.use('/attandance', attendanceRoutes);
+router.use('/ateendance', attendanceRoutes);
+
+
+
+// addentance records
+// router.get("/attandance",attendanceRoutes)
+
 
 export default router

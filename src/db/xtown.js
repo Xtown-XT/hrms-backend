@@ -36,7 +36,7 @@ const Sequelize = SequelizePkg;
 const { DataTypes, Op } = SequelizePkg;
 
 // ✅ Create Sequelize instance for xtown database
-const xtown = new Sequelize("xtown", "ramya", "ramya", {
+const att = new Sequelize("att", "ramya", "ramya", {
   host: "192.168.1.150",
   port: 3306,
   dialect: "mysql",
@@ -46,11 +46,11 @@ const xtown = new Sequelize("xtown", "ramya", "ramya", {
 // ✅ Authenticate connection
 (async () => {
   try {
-    await xtown.authenticate();
-    console.log("✅ Xtown database connected successfully");
+    await att.authenticate();
+    console.log("✅ att database connected successfully");
   } catch (err) {
-    console.error("❌ Xtown Database connection error:", err);
+    console.error("❌ att Database connection error:", err);
   }
 })();
 
-export { xtown, DataTypes, Op };
+export { att, DataTypes, Op };

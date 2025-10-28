@@ -7,7 +7,7 @@ import os from 'os';
 
 // Import two separate Sequelize instances with different names
 import { sequelize as hrmsSequelize } from './src/db/index.js';
-import { xtown as xtownSequelize } from './src/db/xtown.js'; 
+import { att as attnSequelize } from './src/db/xtown.js';
 
 // ← Add this import:
 // import { sequelize } from './src/db/index.js';
@@ -36,8 +36,8 @@ function getLocalIP() {
 app.listen(port, host, async () => {
   try {
     // Sync tables for both databases
-    await hrmsSequelize.sync();      // Sync hrms_demo
-    await xtownSequelize.sync({alert : true});     // Sync xtown / att
+    await hrmsSequelize.sync({alter: true});      // Sync hrms_demo
+    await attnSequelize.sync({ alter: true });  // Sync xtown / att
 
 
     console.log(`Server is running on http://${host}:${port}`);

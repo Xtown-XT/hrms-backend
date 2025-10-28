@@ -1,15 +1,6 @@
 // models/user.model.js
-
-
-import { sequelize,DataTypes} from "../../../db/index.js";
-// import { DataTypes } from 'sequelize';
-// import pkg from 'sequelize';
-// const { DataTypes } = pkg;
-// =======
-// import { sequelize } from "../../../db/index.js";
-// import pkg from "sequelize";
-// const { DataTypes } = pkg;
-
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../../db/index.js";
 
 const User = sequelize.define(
   "User",
@@ -19,18 +10,15 @@ const User = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-
     role: {
       type: DataTypes.ENUM("user", "admin", "superadmin"),
       allowNull: false,
       defaultValue: "user",
     },
-
     username: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-
     email: {
       type: DataTypes.STRING(60),
       unique: true,
@@ -39,12 +27,10 @@ const User = sequelize.define(
         isEmail: true,
       },
     },
-
     password: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-
     phone: {
       type: DataTypes.STRING(15),
       allowNull: true,
@@ -52,38 +38,30 @@ const User = sequelize.define(
         is: /^[0-9]{10,15}$/,
       },
     },
-
-    // -------------------------
-    // OTP fields
     otp: {
-      type: DataTypes.STRING(6), // 6-digit OTP
+      type: DataTypes.STRING(6),
       allowNull: true,
     },
     otp_expires_at: {
-      type: DataTypes.DATE, // OTP expiration timestamp
+      type: DataTypes.DATE,
       allowNull: true,
     },
     otp_verified: {
-      type: DataTypes.BOOLEAN, // true after OTP verification
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    // -------------------------
-
     is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-
     token: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
     refresh_token: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
     created_by: {
       type: DataTypes.UUID,
       allowNull: true,
@@ -96,7 +74,6 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       allowNull: true,
     },
-
     created_by_name: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -109,7 +86,6 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-
     created_by_email: {
       type: DataTypes.STRING,
       allowNull: true,

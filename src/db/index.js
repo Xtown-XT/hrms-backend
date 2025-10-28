@@ -36,7 +36,7 @@ const { DataTypes, Op } = SequelizePkg;
 
 // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
 //   host: "192.168.1.150",
-const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
+const sequelize = new Sequelize("hrms", "ramya", "ramya", {
   host: "192.168.1.150",
   port: 3306,
   dialect: "mysql",
