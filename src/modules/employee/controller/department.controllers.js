@@ -1,17 +1,42 @@
 import Department from "../models/department.model.js";
 import BaseService from "../../../services/service.js";
-
+import { sequelize } from "../../../db/index.js"; // adjust path as per your project
+import { Op } from "sequelize";
 const departmentService = new BaseService(Department);
 
 // POST /api/department/createDepartment
 export const createDepartment = async (req, res) => {
   try {
+    const { department_name } = req.body;
+
+    if (!department_name || typeof department_name !== "string" || !department_name.trim()) {
+      return res.status(400).json({
+        message: "Department name is required",
+      });
+    }
+
+    // ✅ Case-insensitive check using model
+    const existingDept = await Department.findOne({
+      where: sequelize.where(
+        sequelize.fn("LOWER", sequelize.col("department_name")),
+        department_name.toLowerCase().trim()
+      ),
+    });
+
+    if (existingDept) {
+      return res.status(400).json({
+        message: "Department already exists",
+      });
+    }
+
+    // ✅ Create new department
     const payload = {
       ...req.body,
       created_by: req.user?.id || "system",
     };
 
-    const newDepartment = await departmentService.create(payload);
+    const newDepartment = await Department.create(payload);
+
     return res.status(201).json({
       message: "Department created successfully",
       data: newDepartment,

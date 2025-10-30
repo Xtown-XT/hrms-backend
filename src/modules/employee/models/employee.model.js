@@ -18,7 +18,7 @@ const Employee = sequelize.define(
     },
     attendance_id: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     first_name: {
       type: DataTypes.STRING,
@@ -75,28 +75,66 @@ const Employee = sequelize.define(
     paranoid: true, // enables soft delete
     deletedAt: "deleted_at",
 
+    // hooks: {
+    //   beforeCreate: async (employee) => {
+    //     if (!employee.emp_id) {
+    //       const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
+    //       const prefix = `XT-${year}-`;
+
+    //       const lastEmployee = await Employee.findOne({
+    //         where: { emp_id: { [Op.like]: `${prefix}%` } },
+    //         order: [["createdAt", "DESC"]],
+    //       });
+
+    //       let sequence = 1;
+    //       if (lastEmployee) {
+    //         const lastSeq = parseInt(lastEmployee.emp_id.split("-")[2], 10);
+    //         sequence = lastSeq + 1;
+    //       }
+
+    //       const paddedSeq = String(sequence).padStart(3, "0");
+    //       employee.emp_id = `${prefix}${paddedSeq}`;
+    //     }
+    //   },
+    // },
+
     hooks: {
-      beforeCreate: async (employee) => {
-        if (!employee.emp_id) {
-          const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
-          const prefix = `XT-${year}-`;
+  beforeCreate: async (employee) => {
+    if (!employee.emp_id) {
+      const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
+      const prefix = `XT-${year}-`;
 
-          const lastEmployee = await Employee.findOne({
-            where: { emp_id: { [Op.like]: `${prefix}%` } },
-            order: [["createdAt", "DESC"]],
-          });
+      // Find highest existing emp_id for this year
+      const lastEmployee = await Employee.findOne({
+        where: { emp_id: { [Op.like]: `${prefix}%` } },
+        order: [["createdAt", "DESC"]],
+        paranoid: false, // include soft-deleted records too
+      });
 
-          let sequence = 1;
-          if (lastEmployee) {
-            const lastSeq = parseInt(lastEmployee.emp_id.split("-")[2], 10);
-            sequence = lastSeq + 1;
-          }
+      let sequence = 1;
+      if (lastEmployee) {
+        const lastSeq = parseInt(lastEmployee.emp_id.split("-")[2], 10);
+        if (!isNaN(lastSeq)) sequence = lastSeq + 1;
+      }
 
-          const paddedSeq = String(sequence).padStart(3, "0");
-          employee.emp_id = `${prefix}${paddedSeq}`;
+      // Retry until unique emp_id found
+      let unique = false;
+      while (!unique) {
+        const paddedSeq = String(sequence).padStart(3, "0");
+        const newEmpId = `${prefix}${paddedSeq}`;
+
+        const exists = await Employee.findOne({ where: { emp_id: newEmpId }, paranoid: false });
+        if (!exists) {
+          employee.emp_id = newEmpId;
+          unique = true;
+        } else {
+          sequence++;
         }
-      },
-    },
+      }
+    }
+  },
+}
+
   }
 );
 

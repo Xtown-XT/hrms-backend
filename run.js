@@ -18,6 +18,7 @@ dotenv.config();
 const port = process.env.PORT ||4001
 const host = process.env.HOST || getLocalIP();
 
+
 // Function to get the local IP address
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
@@ -36,8 +37,8 @@ function getLocalIP() {
 app.listen(port, host, async () => {
   try {
     // Sync tables for both databases
-    await hrmsSequelize.sync({alter: true});      // Sync hrms_demo
-    await attnSequelize.sync({ alter: true });  // Sync xtown / att
+    await hrmsSequelize.sync();      // Sync hrms_demo
+    await attnSequelize.sync();  // Sync xtown / att
 
 
     console.log(`Server is running on http://${host}:${port}`);

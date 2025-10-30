@@ -40,12 +40,12 @@ const router = express.Router();
 // ✅ CREATE attendance
 router.post(
   "/createAttendance",
-  // verifyToken,
-  // authorizeRole(["admin", "superadmin", "user"]),
+  verifyToken,
+  authorizeRole(["admin", "superadmin", "user"]),
   validate(createAttendanceSchema),
   createAttendance
 );
-router.get("/getAllAttendance",validate(getattendanceSchema),getAllAttendance)
+router.get("/getAllAttendance", verifyToken,authorizeRole(["admin","superadmin","user"]), validate(getattendanceSchema),getAllAttendance)
 // router.get("/getbyId/:id",)
 // validate(),getbyId
 // // // ✅ UPDATE attendance
