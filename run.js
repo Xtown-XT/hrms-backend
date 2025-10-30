@@ -36,8 +36,8 @@ function getLocalIP() {
 app.listen(port, host, async () => {
   try {
     // Sync tables for both databases
-    await hrmsSequelize.sync({alter: true});      // Sync hrms_demo
-    await attnSequelize.sync({ alter: true });  // Sync xtown / att
+    // await hrmsSequelize.sync({alter: false});      // Sync hrms_demo
+    // await attnSequelize.sync({ alter: true });  // Sync xtown / att
 
 
     console.log(`Server is running on http://${host}:${port}`);

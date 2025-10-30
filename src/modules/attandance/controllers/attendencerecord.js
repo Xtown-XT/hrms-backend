@@ -1,4 +1,4 @@
-import Attendance from "../models/attendance.model.js";
+import attendance from "../models/attendance.model.js";
 import Employee from "../../employee/models/employee.model.js";
 import IClockTransaction from "../models/iclock_transaction.model.js";
 import { Op } from "sequelize";
@@ -7,7 +7,7 @@ import { Op } from "sequelize";
 export const getAllrecords = async (req, res) => {
   try {
     // 1️⃣ Fetch attendance from HRMS database
-    const hrmsAttendance = await Attendance.findAll({
+    const hrmsAttendance = await attendance.findAll({
       include: [
         {
           model: Employee,

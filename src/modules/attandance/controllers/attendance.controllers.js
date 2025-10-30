@@ -4,19 +4,22 @@ import { createAttendanceSchema } from "../dto/attandance.zod.js";
 
 export const createAttendance = async (req, res) => {
  try {
-    // ✅ Validate request body
+    // Validate input
     const validatedData = await createAttendanceSchema.parseAsync(req.body);
 
-    // ✅ Check if employee exists
-    const employee = await Employee.findOne({ where: { emp_id: validatedData.emp_id } });
+    // Check if employee exists
+    const employee = await Employee.findOne({
+      where: { emp_id: validatedData.emp_id },
+    });
+
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // ✅ Always allow multiple records per day
+    // Insert attendance
     const attendance = await Attendance.create({
       emp_id: validatedData.emp_id,
-      emp_name: employee.first_name + " " + (employee.last_name || ""),
+      emp_name: `${employee.first_name} ${employee.last_name || ""}`.trim(),
       date: validatedData.date,
       time_in: validatedData.time_in || null,
       time_out: validatedData.time_out || null,
@@ -24,13 +27,13 @@ export const createAttendance = async (req, res) => {
       remarks: validatedData.remarks || "",
     });
 
-    return res.status(201).json({
+    res.status(201).json({
       message: "Attendance recorded successfully",
       data: attendance,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(400).json({
+    console.error("❌ Failed to create attendance:", error);
+    res.status(400).json({
       message: "Failed to add attendance",
       error: error.message,
     });
