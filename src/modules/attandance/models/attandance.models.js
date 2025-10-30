@@ -174,7 +174,7 @@ const Attendance = sequelize.define(
         att.overtime_hours = calculateOvertime(att.time_in, att.time_out);
       },
       beforeUpdate: (att) => {
-        att.time_in = convertTo24Hour(att.time_in);
+        att.time_in = convertTo24Hour(att.time_in); 
         att.time_out = convertTo24Hour(att.time_out);
         att.overtime_hours = calculateOvertime(att.time_in, att.time_out);
       },
@@ -184,4 +184,4 @@ const Attendance = sequelize.define(
 
 Attendance.belongsTo(Employee, { foreignKey: "emp_id" });
 
-export default Attendance;
+export default Attendance; 

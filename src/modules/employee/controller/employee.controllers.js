@@ -664,6 +664,60 @@ const employeeService = new BaseService(Employee);
 // ============================================================
 // 🔹 Create Employee
 // ============================================================
+// export const createEmployee = async (req, res) => {
+//   try {
+//     const { first_name, last_name, emp_id, ...otherFields } = req.body;
+
+//     if (!first_name || !last_name) {
+//       return res.status(400).json({ message: "First name and last name are required" });
+//     }
+
+//     const payload = {
+//       first_name,
+//       last_name,
+//       ...otherFields,
+//       profile_picture: req.file ? `/uploads/employees/${req.file.filename}` : null,
+//       created_by: req.user?.id || "system",
+//     };
+
+//     let attendance_id;
+
+//     try {
+//       const personnelWhere = emp_id ? { emp_code: emp_id } : { first_name, last_name };
+//       const personnel = await PersonnelEmployee.findOne({ where: personnelWhere });
+
+//       if (personnel) {
+//         attendance_id = personnel.id;
+//       } else {
+//         const newPersonnel = await PersonnelEmployee.create({
+//           first_name,
+//           last_name,
+//           emp_code: emp_id || null,
+//           status: 1,
+//           create_time: new Date(),
+//         });
+//         attendance_id = newPersonnel.id;
+//       }
+//     } catch (err) {
+//       attendance_id = Date.now(); // fallback
+//     }
+
+//     payload.attendance_id = attendance_id;
+
+//     const newEmployee = await employeeService.create(payload);
+
+//     return res.status(201).json({
+//       message: "Employee added successfully",
+//       data: newEmployee,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error in createEmployee:", error);
+//     return res.status(500).json({
+//       message: "Failed to create employee",
+//       error: error.message,
+//     });
+//   }
+// };
 export const createEmployee = async (req, res) => {
   try {
     const { first_name, last_name, emp_id, ...otherFields } = req.body;
@@ -699,7 +753,8 @@ export const createEmployee = async (req, res) => {
         attendance_id = newPersonnel.id;
       }
     } catch (err) {
-      attendance_id = Date.now(); // fallback
+      // fallback: convert to string so it matches model's STRING/UUID expectations
+      attendance_id = String(Date.now());
     }
 
     payload.attendance_id = attendance_id;
