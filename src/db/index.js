@@ -34,8 +34,10 @@ import SequelizePkg from "sequelize";
 const Sequelize = SequelizePkg; // <-- fix here
 const { DataTypes, Op } = SequelizePkg;
 
+// Create Sequelize instance
 // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
 //   host: "192.168.1.150",
+
 const sequelize = new Sequelize("hrms", "ramya", "ramya", {
   host: "192.168.1.150",
   port: 3306,
@@ -44,7 +46,6 @@ const sequelize = new Sequelize("hrms", "ramya", "ramya", {
 
 // const sequelize = new Sequelize("hrmsback", "root", "Sanjay@1218", {
 //   host: "127.0.0.1",
-// >>>>>>> e9e9594d5c4e809b64e215c564076b51b5ef198f
 //   port: 3306,
 //   dialect: "mysql",
 // });
