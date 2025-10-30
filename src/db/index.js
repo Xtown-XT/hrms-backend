@@ -1,16 +1,16 @@
-// // Import entire Sequelize module
+
 // import SequelizePkg from "sequelize";
 
 // // Access the Sequelize constructor, DataTypes, and Op
-// const Sequelize = SequelizePkg.Sequelize;
+// const Sequelize = SequelizePkg; // <-- fix here
 // const { DataTypes, Op } = SequelizePkg;
 
-// // Create Sequelize instance
 // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
-//   host: "192.168.1.150",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+//   host: "192.168.1.150",
 //   port: 3306,
 //   dialect: "mysql",
 // });
+
 
 // // Authenticate database connection inside async IIFE
 // (async () => {
@@ -24,7 +24,10 @@
 
 // // Export for models/services
 // export { sequelize, DataTypes, Op };
-// Import entire Sequelize module
+
+
+
+
 import SequelizePkg from "sequelize";
 
 // Access the Sequelize constructor, DataTypes, and Op
@@ -34,15 +37,18 @@ const { DataTypes, Op } = SequelizePkg;
 // Create Sequelize instance
 // const sequelize = new Sequelize("hrms_demo", "ramya", "ramya", {
 //   host: "192.168.1.150",
-//   port: 3306,
-//   dialect: "mysql",
-// });
 
 const sequelize = new Sequelize("hrms", "ramya", "ramya", {
   host: "192.168.1.150",
   port: 3306,
   dialect: "mysql",
 });
+
+// const sequelize = new Sequelize("hrmsback", "root", "Sanjay@1218", {
+//   host: "127.0.0.1",
+//   port: 3306,
+//   dialect: "mysql",
+// });
 
 // Authenticate database connection inside async IIFE
 (async () => {
@@ -56,4 +62,3 @@ const sequelize = new Sequelize("hrms", "ramya", "ramya", {
 
 // Export for models/services
 export { sequelize, DataTypes, Op };
-

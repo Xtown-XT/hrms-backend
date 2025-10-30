@@ -33,61 +33,62 @@
 // router.delete("/deleteCompanyAsset/:id", validate(idSchema, "params"), deleteCompanyAsset);
 
 // export default router;
-import { Router } from "express";
-import companyassetController from "../controller/companyasset.controller.js";
-import { verifyToken, authorizeRole } from "../../../middleware/index.js";
-import { validate } from "../../../middleware/validate.js";
+// import { Router } from "express";
+// import companyassetController, { createCompanyAsset } from "../controller/companyasset.controller.js";
+// import { verifyToken, authorizeRole } from "../../../middleware/index.js";
+// import { validate } from "../../../middleware/validate.js";
 
-import {
-  createCompanyAssetSchema,
-  updateCompanyAssetSchema,
-  idSchema,
-} from "../dto/companyasset.zod.js";
+// import {
+//   createCompanyAssetSchema,
+//   updateCompanyAssetSchema,
+//   idSchema,
+// } from "../dto/companyasset.zod.js";
 
-const router = Router();
+// const router = Router();
 
-// 🔓 Public Routes
-router.post(
-  "/companyasset/create",
-  verifyToken,
-  authorizeRole(
-    // ["admin"]
-    ["admin", "superadmin", "user"]
-  ),
-  companyassetController.createCompanyAsset
-);
+// // 🔓 Public Routes
+// router.post(
+//   "/companyasset/create",
+//   verifyToken,
+//   authorizeRole(
+//     // ["admin"]
+//     ["admin", "superadmin", "user"],
+//     validate(createCompanyAssetSchema),
+//   ),
+//   companyassetController,createCompanyAsset
+// );
 
-router.get(
-  "/companyasset/all",
-  verifyToken,
-  authorizeRole(["admin","superadmin","user"]),
-  companyassetController.getAllCompanyAssets
-);
+// router.get(
+//   "/companyasset/all",
+//   verifyToken,
+//   authorizeRole(["admin","superadmin","user"]),
+//   companyassetController.getAllCompanyAssets
+// );
 
-// 🔒 Protected Routes
-router.get(
-  "/companyasset/:id",
-  verifyToken,
-  authorizeRole(["admin","superadmin","user"]),
-  validate(idSchema, "params"),
-  companyassetController.getCompanyAssetById
-);
+// // 🔒 Protected Routes
+// router.get(
+//   "/companyasset/:id",
+//   verifyToken,
+//   authorizeRole(["admin","superadmin","user"]),
+//   validate(idSchema, "params"),
+//   companyassetController.getCompanyAssetById
+// );
 
-router.put(
-  "/companyasset/:id",
-  verifyToken,
-  authorizeRole(["admin"]),
-  validate(updateCompanyAssetSchema),
-  companyassetController.updateCompanyAsset
-);
+// router.put(
+//   "/companyasset/:id",
+//   verifyToken,
+//   authorizeRole(["admin"]),
+//   validate(updateCompanyAssetSchema),
+//   companyassetController.updateCompanyAsset
+// );
 
-router.delete(
-  "/companyasset/:id",
-  verifyToken,
-  authorizeRole(["admin"]),
-  validate(idSchema, "params"),
-  companyassetController.deleteCompanyAsset
-);
+// router.delete(
+//   "/companyasset/:id",
+//   verifyToken,
+//   authorizeRole(["admin"]),
+//   validate(idSchema, "params"),
+//   companyassetController.deleteCompanyAsset
+// );
 
-export default router;
+// export default router;
 

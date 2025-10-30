@@ -907,6 +907,63 @@ export const deleteEmployee = async (req, res) => {
 // ============================================================
 // 🔹 Add Full Employee Info (details + documents + emergency)
 // ============================================================
+// export const addEmployeeFullInfo = async (req, res) => {
+//   const transaction = await sequelize.transaction();
+
+//   try {
+//     const { emp_id } = req.body;
+//     if (!emp_id) {
+//       return res.status(400).json({ message: "emp_id is required" });
+//     }
+
+//     const detailsData = req.body.details ? JSON.parse(req.body.details) : {};
+//     const emergencyData = req.body.emergency ? JSON.parse(req.body.emergency) : [];
+
+//     // Employee Details
+//     const employeeDetails = await EmployeeDetails.create(
+//       { ...detailsData, emp_id },
+//       { transaction }
+//     );
+
+//     // Employee Documents
+//     const docFields = [
+//       "resume","aadhar","pan","degree","marksheet","relieving","experience",
+//       "offer","passport","driving","addressproof","bankproof"
+//     ];
+
+//     const uploadedDocs = {};
+//     docFields.forEach((field) => {
+//       if (req.files && req.files[field]) {
+//         uploadedDocs[field] = path.basename(req.files[field][0].path);
+//       }
+//     });
+
+//     const employeeDocuments = await EmployeeDocuments.create(
+//       { emp_id, ...uploadedDocs },
+//       { transaction }
+//     );
+
+//     // Employee Emergency Contacts
+//     const employeeEmergencies = await Promise.all(
+//       emergencyData.map((contact) => EmployeeEmergency.create({ ...contact, emp_id }, { transaction }))
+//     );
+
+//     await transaction.commit();
+
+//     return res.status(201).json({
+//       message: "Employee full info added successfully",
+//       data: { details: employeeDetails, documents: employeeDocuments, emergencies: employeeEmergencies },
+//     });
+//   } catch (error) {
+//     await transaction.rollback();
+//     console.error("❌ Error adding employee info:", error);
+//     return res.status(500).json({
+//       message: "Error adding employee information",
+//       error: error.message,
+//     });
+//   }
+// };
+
 export const addEmployeeFullInfo = async (req, res) => {
   const transaction = await sequelize.transaction();
 
@@ -919,9 +976,11 @@ export const addEmployeeFullInfo = async (req, res) => {
     const detailsData = req.body.details ? JSON.parse(req.body.details) : {};
     const emergencyData = req.body.emergency ? JSON.parse(req.body.emergency) : [];
 
+    const userId = req.user.id; // <-- from token
+
     // Employee Details
     const employeeDetails = await EmployeeDetails.create(
-      { ...detailsData, emp_id },
+      { ...detailsData, emp_id, created_by: userId, updated_by: userId },
       { transaction }
     );
 
@@ -939,13 +998,15 @@ export const addEmployeeFullInfo = async (req, res) => {
     });
 
     const employeeDocuments = await EmployeeDocuments.create(
-      { emp_id, ...uploadedDocs },
+      { emp_id, ...uploadedDocs, created_by: userId, updated_by: userId },
       { transaction }
     );
 
     // Employee Emergency Contacts
     const employeeEmergencies = await Promise.all(
-      emergencyData.map((contact) => EmployeeEmergency.create({ ...contact, emp_id }, { transaction }))
+      emergencyData.map((contact) =>
+        EmployeeEmergency.create({ ...contact, emp_id, created_by: userId, updated_by: userId }, { transaction })
+      )
     );
 
     await transaction.commit();
@@ -964,6 +1025,200 @@ export const addEmployeeFullInfo = async (req, res) => {
   }
 };
 
+
+export const updateEmployeeFullInfo = async (req, res) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const { emp_id } = req.params; // employee id from URL
+    if (!emp_id) {
+      return res.status(400).json({ message: "emp_id is required" });
+    }
+
+    const detailsData = req.body.details ? JSON.parse(req.body.details) : {};
+    const userId = req.user.id; // from token
+
+    // 🟢 1️⃣ Handle EmployeeDetails
+    const existingDetails = await EmployeeDetails.findOne({ where: { emp_id }, transaction });
+
+    if (existingDetails) {
+      // Compare only if detailsData has keys
+      if (Object.keys(detailsData).length > 0) {
+        const hasChanges = Object.keys(detailsData).some(
+          (key) => detailsData[key] != existingDetails[key]
+        );
+
+        if (hasChanges) {
+          await existingDetails.update(
+            { ...detailsData, updated_by: userId },
+            { transaction }
+          );
+          console.log("🟢 Employee details updated.");
+        } else {
+          console.log("⏩ No changes in employee details, keeping old data.");
+        }
+      } else {
+        console.log("⏩ No new details sent, keeping old data.");
+      }
+    } else {
+      // If details didn’t exist, create a new one
+      await EmployeeDetails.create(
+        { ...detailsData, emp_id, created_by: userId, updated_by: userId },
+        { transaction }
+      );
+      console.log("🟢 Employee details created (no existing record).");
+    }
+
+    // 🟢 2️⃣ Handle EmployeeDocuments
+    const docFields = [
+      "resume", "aadhar", "pan", "degree", "marksheet", "relieving",
+      "experience", "offer", "passport", "driving", "addressproof", "bankproof"
+    ];
+
+    const uploadedDocs = {};
+    docFields.forEach((field) => {
+      if (req.files && req.files[field]) {
+        uploadedDocs[field] = path.basename(req.files[field][0].path);
+      }
+    });
+
+    const existingDocs = await EmployeeDocuments.findOne({ where: { emp_id }, transaction });
+
+    if (existingDocs) {
+      if (Object.keys(uploadedDocs).length > 0) {
+        const hasDocChanges = Object.keys(uploadedDocs).some(
+          (key) => uploadedDocs[key] != existingDocs[key]
+        );
+
+        if (hasDocChanges) {
+          await existingDocs.update(
+            { ...uploadedDocs, updated_by: userId },
+            { transaction }
+          );
+          console.log("🟢 Employee documents updated.");
+        } else {
+          console.log("⏩ No new document changes, keeping old files.");
+        }
+      } else {
+        console.log("⏩ No document uploads provided, keeping old files.");
+      }
+    } else {
+      await EmployeeDocuments.create(
+        { emp_id, ...uploadedDocs, created_by: userId, updated_by: userId },
+        { transaction }
+      );
+      console.log("🟢 Employee documents created (no existing record).");
+    }
+
+    // // 🟢 3️⃣ EmployeeEmergency Contacts (unchanged logic)
+    // if (req.body.emergency) {
+    //   const emergencyData = JSON.parse(req.body.emergency);
+
+    //   await EmployeeEmergency.destroy({ where: { emp_id }, transaction });
+
+    //   if (emergencyData.length > 0) {
+    //     await Promise.all(
+    //       emergencyData.map((contact) =>
+    //         EmployeeEmergency.create(
+    //           { ...contact, emp_id, created_by: userId, updated_by: userId },
+    //           { transaction }
+    //         )
+    //       )
+    //     );
+    //   }
+    // } else {
+    //   console.log("⏩ Skipping emergency contact update since none was provided.");
+    // }
+
+
+    // 🟢 3️⃣ EmployeeEmergency Contacts (update without duplication)
+if (req.body.emergency) {
+  let emergencyData = [];
+  try {
+    if (req.body.emergency.trim() !== "") {
+      emergencyData = JSON.parse(req.body.emergency);
+    }
+  } catch (err) {
+    console.warn("⚠️ Invalid emergency JSON:", err.message);
+  }
+
+  const existingContacts = await EmployeeEmergency.findAll({ where: { emp_id }, transaction });
+
+  // Update or create contacts
+  const updatedOrCreatedIds = [];
+
+  for (const contact of emergencyData) {
+    if (contact.id) {
+      // Check if the contact already exists
+      const existing = existingContacts.find((c) => c.id === contact.id);
+      if (existing) {
+        // Update only if there are actual changes
+        const hasChanges = Object.keys(contact).some(
+          (key) => contact[key] != existing[key]
+        );
+
+        if (hasChanges) {
+          await existing.update(
+            { ...contact, updated_by: userId },
+            { transaction }
+          );
+          console.log(`🟢 Updated emergency contact ${contact.id}`);
+        } else {
+          console.log(`⏩ No changes for contact ${contact.id}`);
+        }
+
+        updatedOrCreatedIds.push(contact.id);
+      } else {
+        // If ID provided but not found, create new
+        const newContact = await EmployeeEmergency.create(
+          { ...contact, emp_id, created_by: userId, updated_by: userId },
+          { transaction }
+        );
+        updatedOrCreatedIds.push(newContact.id);
+        console.log(`🟢 Created new contact (id mismatch): ${newContact.id}`);
+      }
+    } else {
+      // No ID means new contact
+      const newContact = await EmployeeEmergency.create(
+        { ...contact, emp_id, created_by: userId, updated_by: userId },
+        { transaction }
+      );
+      updatedOrCreatedIds.push(newContact.id);
+      console.log("🟢 Created new emergency contact");
+    }
+  }
+
+  // Delete contacts not included in the new request
+  const toDelete = existingContacts.filter(
+    (c) => !updatedOrCreatedIds.includes(c.id)
+  );
+  for (const del of toDelete) {
+    await del.destroy({ transaction });
+    console.log(`🗑️ Deleted old emergency contact: ${del.id}`);
+  }
+
+} else {
+  console.log("⏩ Skipping emergency contact update since none was provided.");
+}
+
+    await transaction.commit();
+
+    return res.status(200).json({
+      message: "Employee full info updated successfully",
+    });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("❌ Error updating employee info:", error);
+    return res.status(500).json({
+      message: "Error updating employee information",
+      error: error.message,
+    });
+  }
+};
+
+
+
+
 export default {
   createEmployee,
   updateEmployee,
@@ -971,4 +1226,5 @@ export default {
   getEmployeeById,
   deleteEmployee,
   addEmployeeFullInfo,
+  updateEmployeeFullInfo
 };

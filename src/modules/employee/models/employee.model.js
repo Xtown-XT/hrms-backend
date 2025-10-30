@@ -118,6 +118,7 @@ const Employee = sequelize.define(
       // emp_id is a formatted string like "XT-25-001" — keep it STRING
       type: DataTypes.STRING,
       allowNull: true,   // allow null because hook will generate if not provided
+      allowNull: true,
       unique: true,
     },
     attendance_id: {
