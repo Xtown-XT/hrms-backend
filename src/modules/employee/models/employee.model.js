@@ -1,4 +1,3 @@
-// src/modules/employee/models/employee.model.js
 import { DataTypes, Op } from "sequelize";
 import { sequelize } from "../../../db/index.js";
 
@@ -9,16 +8,18 @@ const Employee = sequelize.define(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      allowNull: false,
+      allowNull: false, 
     },
     emp_id: {
+      // emp_id is a formatted string like "XT-25-001" — keep it STRING
       type: DataTypes.STRING,
+      allowNull: true,   // allow null because hook will generate if not provided
       allowNull: true,
       unique: true,
     },
     attendance_id: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true,   // allow null to avoid insert failures (controller sets it)
     },
     first_name: {
       type: DataTypes.STRING,
@@ -54,7 +55,7 @@ const Employee = sequelize.define(
     },
     created_by: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true, // made nullable to allow "system" or missing user during development
       references: {
         model: "endusers",
         key: "id",
@@ -72,69 +73,35 @@ const Employee = sequelize.define(
   {
     tableName: "employees",
     timestamps: true,
-    paranoid: true, // enables soft delete
+    paranoid: true, 
     deletedAt: "deleted_at",
 
-    // hooks: {
-    //   beforeCreate: async (employee) => {
-    //     if (!employee.emp_id) {
-    //       const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
-    //       const prefix = `XT-${year}-`;
-
-    //       const lastEmployee = await Employee.findOne({
-    //         where: { emp_id: { [Op.like]: `${prefix}%` } },
-    //         order: [["createdAt", "DESC"]],
-    //       });
-
-    //       let sequence = 1;
-    //       if (lastEmployee) {
-    //         const lastSeq = parseInt(lastEmployee.emp_id.split("-")[2], 10);
-    //         sequence = lastSeq + 1;
-    //       }
-
-    //       const paddedSeq = String(sequence).padStart(3, "0");
-    //       employee.emp_id = `${prefix}${paddedSeq}`;
-    //     }
-    //   },
-    // },
-
     hooks: {
-  beforeCreate: async (employee) => {
-    if (!employee.emp_id) {
-      const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
-      const prefix = `XT-${year}-`;
+      beforeCreate: async (employee) => {
+        if (!employee.emp_id) {
+          const year = new Date().getFullYear().toString().slice(-2); // e.g. "25"
+          const prefix = `XT-${year}-`;
 
-      // Find highest existing emp_id for this year
-      const lastEmployee = await Employee.findOne({
-        where: { emp_id: { [Op.like]: `${prefix}%` } },
-        order: [["createdAt", "DESC"]],
-        paranoid: false, // include soft-deleted records too
-      });
+          const lastEmployee = await Employee.findOne({
+            where: { emp_id: { [Op.like]: `${prefix}% `} },
+            order: [["createdAt", "DESC"]],
+          });
 
-      let sequence = 1;
-      if (lastEmployee) {
-        const lastSeq = parseInt(lastEmployee.emp_id.split("-")[2], 10);
-        if (!isNaN(lastSeq)) sequence = lastSeq + 1;
-      }
+          let sequence = 1;
+          if (lastEmployee && lastEmployee.emp_id) {
+            // guard parsing — default to 0 if parseInt fails
+            const parts = lastEmployee.emp_id.split("-");
+            const lastSeq = parseInt(parts[2], 10);
+            if (!Number.isNaN(lastSeq)) {
+              sequence = lastSeq + 1;
+            }
+          }
 
-      // Retry until unique emp_id found
-      let unique = false;
-      while (!unique) {
-        const paddedSeq = String(sequence).padStart(3, "0");
-        const newEmpId = `${prefix}${paddedSeq}`;
-
-        const exists = await Employee.findOne({ where: { emp_id: newEmpId }, paranoid: false });
-        if (!exists) {
-          employee.emp_id = newEmpId;
-          unique = true;
-        } else {
-          sequence++;
+          const paddedSeq = String(sequence).padStart(3, "0");
+          employee.emp_id = `${prefix}${paddedSeq}`;
         }
-      }
-    }
-  },
-}
-
+      },
+    },
   }
 );
 

@@ -31,15 +31,15 @@ function getLocalIP() {
   }
   return '0.0.0.0';
 }
-
+     
 
 // Start server and sync both databases
 app.listen(port, host, async () => {
   try {
     // Sync tables for both databases
+
     await hrmsSequelize.sync();      // Sync hrms_demo
     await attnSequelize.sync();  // Sync xtown / att
-
 
     console.log(`Server is running on http://${host}:${port}`);
   } catch (err) {

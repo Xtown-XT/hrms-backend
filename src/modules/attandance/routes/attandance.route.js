@@ -2,43 +2,23 @@ import express from "express";
 import {
   createAttendance,
   getAllAttendance,
-  // getbyId,
-  // deleteAttendance,
-  // getAllAttendance,
-  // getAttendanceById,
-  // updateAttendance,
 } from "../controllers/attendance.controllers.js";
-import { verifyToken, authorizeRole } from "../../../middleware/index.js";
+
 import { validate } from "../../../middleware/validate.js";
 import {
   createAttendanceSchema,
   getattendanceSchema,
-  // deleteAttendanceSchema,
-  // getAttendanceByIdSchema,
-  // updateAttendanceSchema,
 } from "../dto/attandance.zod.js";
+import { verify } from "crypto";
+import { verifyToken } from "../../../middleware/auth.js";
+import { authorizeRole } from "../../../middleware/authenticateRole.js";
 
 const router = express.Router();
 
-// // ✅ GET all attendance
-// router.get(
-//   "/getAllAttendance",
-//   verifyToken,
-//   authorizeRole(["admin", "superadmin", "user"]),
-//   getAllAttendance
-// );
-
-// // // ✅ GET attendance by ID
-// // router.get(
-//   "/:id",
-//   verifyToken,
-//   authorizeRole(["admin", "superadmin", "user"]),
-//   validate(getAttendanceByIdSchema),
-// //   getAttendanceById
-// // );
 
 // ✅ CREATE attendance
 router.post(
+<<<<<<< HEAD
   "/createAttendance",
   verifyToken,
   authorizeRole(["admin", "superadmin", "user"]),
@@ -72,6 +52,12 @@ router.get("/getAllAttendance", verifyToken,authorizeRole(["admin","superadmin",
 
 
 
+=======
+  "/createAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(createAttendanceSchema),
+  createAttendance
+);
+router.get("/getAllAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(getattendanceSchema),getAllAttendance)
+>>>>>>> 8827d08c6e1d3d4aaba504c8735c5973a93e81ad
 
 
 
