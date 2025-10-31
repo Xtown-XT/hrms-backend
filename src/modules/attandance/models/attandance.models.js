@@ -106,7 +106,9 @@ const Attendance = sequelize.define(
     tableName: "attendance",
     timestamps: true,
     paranoid: true,
-    deletedAt: "deleted_at",
+
+
+
   }
 );
 
@@ -114,5 +116,7 @@ const Attendance = sequelize.define(
 Employee.hasMany(Attendance, { foreignKey: "emp_id", sourceKey: "emp_id" });
 Attendance.belongsTo(Employee, { foreignKey: "emp_id", targetKey: "emp_id" });
 
-export default Attendance;
+
+export default Attendance; 
+
 

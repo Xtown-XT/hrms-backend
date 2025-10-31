@@ -1,8 +1,9 @@
-import { DataTypes } from "sequelize";
-import {att} from "../../../db/xtown"
 
-const IclockTransaction = att.define(
-  "iclock_transaction",
+import { DataTypes } from "sequelize";
+import { att } from "../../../db/xtown.js";
+
+const IClockTransaction = att.define(
+  "IclockTransaction",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -113,7 +114,22 @@ const IclockTransaction = att.define(
   {
     tableName: "iclock_transaction",
     timestamps: false,
+    // indexes: [
+    //   {
+    //     unique: true,
+    //     fields: ["emp_code", "punch_time", "terminal_sn", "company_id"],
+    //   },
+    //   {
+    //     fields: ["emp_id"],
+    //   },
+    //   {
+    //     fields: ["terminal_id"],
+    //   },
+    //   {
+    //     fields: ["company_id", "punch_time"],
+    //   },
+    // ],
   }
 );
 
-export default IclockTransaction;
+export default IClockTransaction;
