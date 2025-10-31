@@ -16,26 +16,18 @@ const Branch = sequelize.define(
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isEmail: true,
       },
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    address_line1: {
+    address: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    address_line2: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
     country: {
       type: DataTypes.STRING,

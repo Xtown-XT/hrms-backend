@@ -18,7 +18,7 @@ const router = express.Router();
 
 // ✅ CREATE attendance
 router.post(
-<<<<<<< HEAD
+
   "/createAttendance",
   verifyToken,
   authorizeRole(["admin", "superadmin", "user"]),
@@ -52,12 +52,12 @@ router.get("/getAllAttendance", verifyToken,authorizeRole(["admin","superadmin",
 
 
 
-=======
+
   "/createAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(createAttendanceSchema),
   createAttendance
-);
+
 router.get("/getAllAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(getattendanceSchema),getAllAttendance)
->>>>>>> 8827d08c6e1d3d4aaba504c8735c5973a93e81ad
+
 
 
 

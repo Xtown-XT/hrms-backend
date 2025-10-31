@@ -122,19 +122,29 @@ export const updateDepartment = async (req, res) => {
 export const deleteDepartment = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await departmentService.delete(id);
+
+    // 🟡 Update the record instead of deleting it
+    const department = await departmentService.update(id, { is_active: false });
+
+    if (!department) {
+      return res.status(404).json({
+        message: "Department not found",
+      });
+    }
+
     return res.status(200).json({
-      message: "Department deleted successfully",
-      data: result,
+      message: "Department deactivated successfully",
+      // data: department,
     });
   } catch (error) {
     console.error("❌ Error in deleteDepartment:", error);
     return res.status(500).json({
-      message: "Failed to delete department",
+      message: "Failed to deactivate department",
       error: error.message,
     });
   }
 };
+
 
 // PUT /api/department/restoreDepartment/:id
 export const restoreDepartment = async (req, res) => {

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const createEmployeeSchema = z.object({
   body: z.object({
     emp_id: z.string().min(1, "Employee ID is required"),
-    attendance_id: z.string().min(1, "Attendance ID is required"),
+    attendance_id: z.number().min(1, "Attendance ID is required"),
     first_name: z.string().min(1, "First name is required"),
     last_name: z.string().min(1, "Last name is required"),
     date_of_joining: z.string().min(1, "Date of joining is required"),
