@@ -1,5 +1,7 @@
 import { DataTypes, Op } from "sequelize";
 import { sequelize } from "../../../db/index.js";
+import Department from "./department.model.js";
+
 const Role = sequelize.define(
   "Role",
   {
@@ -13,8 +15,9 @@ const Role = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    role_description: {
-      type: DataTypes.STRING,
+    department_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
     is_active: {
@@ -37,5 +40,11 @@ const Role = sequelize.define(
     paranoid : true
   }
 );
+
+// 🟢 Define association
+Role.belongsTo(Department, {
+  foreignKey: "department_id",
+  as: "department",
+});
 
 export default Role;

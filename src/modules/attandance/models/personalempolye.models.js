@@ -1,3 +1,4 @@
+
 import { DataTypes } from "sequelize";
 import { att } from "../../../db/xtown.js";
 

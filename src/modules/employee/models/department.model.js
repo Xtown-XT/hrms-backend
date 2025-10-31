@@ -14,22 +14,7 @@ const Department = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: true,
-      },
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-   is_active: {
+    is_active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       allowNull: false,
@@ -55,7 +40,7 @@ const Department = sequelize.define(
   {
     tableName: "departments",
     timestamps: true,
-    paranoid: true, // soft delete
+    paranoid: true,
     deletedAt: "deleted_at",
   }
 );

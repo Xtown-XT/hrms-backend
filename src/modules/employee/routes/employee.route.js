@@ -12,6 +12,13 @@ import {
 
 const router = Router();
 
+router.get(
+  "/getEmpCodeByName",
+  verifyToken,
+  authorizeRole(["admin", "superadmin", "users"]),
+  employeeController.getEmpCodeByName
+);
+
 // CREATE
 router.post(
   "/createEmployee",

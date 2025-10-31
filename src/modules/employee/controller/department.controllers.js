@@ -1,17 +1,42 @@
 import Department from "../models/department.model.js";
 import BaseService from "../../../services/service.js";
-
+import { sequelize } from "../../../db/index.js"; // adjust path as per your project
+import { Op } from "sequelize";
 const departmentService = new BaseService(Department);
 
 // POST /api/department/createDepartment
 export const createDepartment = async (req, res) => {
   try {
+    const { department_name } = req.body;
+
+    if (!department_name || typeof department_name !== "string" || !department_name.trim()) {
+      return res.status(400).json({
+        message: "Department name is required",
+      });
+    }
+
+    // ✅ Case-insensitive check using model
+    const existingDept = await Department.findOne({
+      where: sequelize.where(
+        sequelize.fn("LOWER", sequelize.col("department_name")),
+        department_name.toLowerCase().trim()
+      ),
+    });
+
+    if (existingDept) {
+      return res.status(400).json({
+        message: "Department already exists",
+      });
+    }
+
+    // ✅ Create new department
     const payload = {
       ...req.body,
       created_by: req.user?.id || "system",
     };
 
-    const newDepartment = await departmentService.create(payload);
+    const newDepartment = await Department.create(payload);
+
     return res.status(201).json({
       message: "Department created successfully",
       data: newDepartment,
@@ -97,19 +122,29 @@ export const updateDepartment = async (req, res) => {
 export const deleteDepartment = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await departmentService.delete(id);
+
+    // 🟡 Update the record instead of deleting it
+    const department = await departmentService.update(id, { is_active: false });
+
+    if (!department) {
+      return res.status(404).json({
+        message: "Department not found",
+      });
+    }
+
     return res.status(200).json({
-      message: "Department deleted successfully",
-      data: result,
+      message: "Department deactivated successfully",
+      // data: department,
     });
   } catch (error) {
     console.error("❌ Error in deleteDepartment:", error);
     return res.status(500).json({
-      message: "Failed to delete department",
+      message: "Failed to deactivate department",
       error: error.message,
     });
   }
 };
+
 
 // PUT /api/department/restoreDepartment/:id
 export const restoreDepartment = async (req, res) => {
