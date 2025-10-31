@@ -40,14 +40,14 @@ app.get('/api/error', (req, res) => {
 
 app.use('/hrms_api/v1', userRoutes);
 app.use('/hrms_api/v1', shiftRoutes);
-<<<<<<< HEAD
-app.use('/hrms_api/v1', employeeRoutes);
-=======
 
 app.use('/hrms_api/v1', employeeRoutes);
 
 
->>>>>>> 301f14e695c857b9b6236cceb93ed10c29b126af
+app.use('/hrms_api/v1', employeeRoutes);
+
+
+
 app.use('/hrms_api/v1',attendanceRoutes);
 // app.use('/hrms_api/v1',payrollRoutes);
 
