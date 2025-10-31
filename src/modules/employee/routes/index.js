@@ -9,9 +9,9 @@ import roleRoute from "./role.routes.js";
 const router = express.Router();
 
 router.use("/employee", employeeRoutes);
-router.use("/department", departmentRoute);
-router.use("/division", divisionRoute);
-router.use("/branch", branchRoute);
-router.use("/role", roleRoute);
+// router.use("/department", departmentRoute);
+// router.use("/division", divisionRoute);
+// router.use("/branch", branchRoute);
+// router.use("/role", roleRoute);
 
 export default router;

@@ -9,16 +9,14 @@ import {
   createAttendanceSchema,
   getattendanceSchema,
 } from "../dto/attandance.zod.js";
-import { verify } from "crypto";
-import { verifyToken } from "../../../middleware/auth.js";
-import { authorizeRole } from "../../../middleware/authenticateRole.js";
+import { verifyToken,authorizeRole } from "../../../middleware/index.js";
 
 const router = express.Router();
 
 
 // ✅ CREATE attendance
 router.post(
-  "/createAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(createAttendanceSchema),
+  "/createatAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(createAttendanceSchema),
   createAttendance
 );
 router.get("/getAllAttendance",verifyToken,authorizeRole(["admin", "superadmin", "user"]),validate(getattendanceSchema),getAllAttendance)

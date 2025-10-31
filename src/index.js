@@ -10,12 +10,9 @@ import { responseHelper } from './middleware/index.js';
 import userRoutes from './modules/user/routes/index.js';
 import employeeRoutes from './modules/employee/routes/index.js';
 import shiftRoutes from './modules/shiftmaster/routes/index.js';
-<<<<<<< HEAD
-import employee from './modules/employee/routes/index.js'
-// import attendanceRoutes from './modules/attandance/routes/index.js';
-=======
-import attendanceRoutes from './modules/attandance/routes/index.js'
->>>>>>> 8d36aa91f99b716b5a8ece877af25aff90b35443
+import attendanceRoutes from './modules/attandance/routes/index.js';
+// import payrollRoutes from './modules/payrollmaster/routes/index.js';
+
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -41,19 +38,11 @@ app.get('/api/error', (req, res) => {
 });
 
 app.use('/hrms_api/v1', userRoutes);
-
 app.use('/hrms_api/v1', shiftRoutes);
-
-<<<<<<< HEAD
-app.use('/hrms_api/v1', employee)
-
-
-=======
 app.use('/hrms_api/v1', employeeRoutes);
->>>>>>> 8d36aa91f99b716b5a8ece877af25aff90b35443
-
 app.use('/hrms_api/v1',attendanceRoutes);
-// app.use("/hrms_api/v1", moduleRoutes);
+// app.use('/hrms_api/v1',payrollRoutes);
+
 
 
 app.use((req, res) => {

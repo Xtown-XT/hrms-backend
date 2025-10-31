@@ -1,7 +1,6 @@
 import { Op } from "sequelize";
 import PayrollSlip from "../models/payrollslip.js";
 import BaseService from "../../../services/service.js";
-import exportToPdf from "../../../utils/exportToPdf.js";
 
 const payrollSlipService = new BaseService(PayrollSlip);
 
