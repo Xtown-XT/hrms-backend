@@ -46,7 +46,7 @@ export const getAllAttendance = async (req, res) => {
       include: [
         {
           model: Employee,
-          attributes: ["emp_id", "first_name", "last_name"], // ✅ fixed
+          attributes: ["emp_id", "first_name", "last_name"], 
         },
       ],
       order: [["date", "DESC"]],
